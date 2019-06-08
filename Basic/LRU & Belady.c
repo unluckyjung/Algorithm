@@ -2,36 +2,39 @@
 #include <stdlib.h>
 #include <string.h>
 
-int pages[100000];
-int frames[100000];
+int pages[1000000]; //pages 배열을 임시로 잡아둔것, 넉넉히 100만으로 잡음.
+int frames[1000000]; //frames 배열을 임시로 잡아둔것, 넉넉히 100만으로 잡음.
 
 
 
 
-void belady(int total_frames, int pcount) {
+void belady(int total_frames, int pcount) { //belady 알고리즘
+											//프레임안의 것중 뒤를 보았을때 가장 안쓰이는 놈을 빼는 방식
 
 
-	int a = 0, b = 0;
-	int pagefault = 0;
-	int pagehit = 0;
+	int a = 0, b = 0; //if문을 컨트롤할 변수들
+	int pagefault = 0; //pagefault값을 0으로 초기화
+	int pagehit = 0; //pagehit 값을 0으로 초기화
 
-	int find[1001];
+	int find[1001]; //find배열. 해당 프레임이 얼마나 안쓰이는지 확인할때 필요한 배열
+					//우리는 지금 0~1000까지 1001가지의 숫자만 사용하는것을 "안다는" 가정하에 짜는 알고리즘
+					//이기 때문에 해당 배열을 크기를 다음과 같이 잡음.
 
 
 
 	for (int i = 0; i < total_frames; i++)
-		frames[i] = -1;
+		frames[i] = -1; // total_frames 만큼의 frame공간들을 -1로 초기화
 
 
 
 
-	for (int m = 0; m < pcount; m++) {
-		a = 0, b = 0;
-		for (int n = 0; n < total_frames; n++) {
-			if (pages[m] == frames[n]) {
-				pagehit++;
-				a = 1, b = 1;
-				break;
+	for (int m = 0; m < pcount; m++) { //page와 frame을 비교하기 위해서, 전체 페이지를 읽기위한 for문
+		a = 0, b = 0; //a와 b는 page fault가 난 경우의 수를 구별하기위한 if문을 위한 변수.
+		for (int n = 0; n < total_frames; n++) { //page와 frame을 비교하기위해서, 전체 프레임을 읽기위한 for문
+			if (pages[m] == frames[n]) { //페이지와 frame을 비교했을때 같다면
+				pagehit++; //page hit가 난것으로 pagehit를 변수를 증가
+				a = 1, b = 1; //page hit가 났으므로, fault부분의 if문을 돌릴 필요가 없게됌.
+				break; //더 이상의 작업이 필요없기 때문에 break함.
 			}
 		}
 
@@ -46,50 +49,45 @@ void belady(int total_frames, int pcount) {
 			pagefault++; //page fault가 낫으므로 값을 증가시킴
 		}
 		if (b == 0) { //page fault가 났는데, 빈공간도 없는 상황.
-			int z = 0;
-			for (int i = 0; i < 1001; i++)
+			int z = 0; //page fault가 난 상황에서 두가지 경우의 수를 구별하기 위한 if문을 제어하는 변수
+			for (int i = 0; i < 1001; i++) //find 배열을 전부 -1로 초기화
 				find[i] = -1;
 
-			for (int i = 0; i < total_frames; i++) {
-				for (int j = m; j < pcount; j++) {
-					if (frames[i] == pages[j]) {
-						find[(frames[i])] = j;
-						break;
-					}
+			for (int i = 0; i < total_frames; i++) { //전체 프레임을 읽기위한 for문
+				for (int j = m; j < pcount; j++) { //page fault가 난 지점부터, 페이지를 탐색함 
+					if (frames[i] == pages[j]) { //프레임 안의 어느 숫자가 , 나중에 등장할 페이지 숫자와 같다면
+						find[(frames[i])] = j; //find 배열안에에 어느 숫자가 , 맨앞에서부터 몇번째 탐색번째에 발견되었는지를 저장함.
+						break; //예시를 들면 find[2] = 8 이 된다면, 2번이라는 숫자는 페이지의 맨 앞에서부터 탐색해 들어갔을때 9번째에 등장했다는 이야기(시작이 0 이니)
+					}          //어차피 j의 값은 fault난 부분의 m의 이상이기 때문에 앞에 등장한놈은 상관이없음.
 				}
 			}
+			//여기서 굳이 find[(frames[i])] 방식으로 접근하는 이유는, i의 값이 1000을 초과 할시, 문제가 생길 수 있기 때문에
+			//frame의 몇번째에 뭐가 있는 방식아니고, 어차피 우리는 숫자가 0~1000까지인것을 알기 때문에, 
+			//숫자 몇번이 앞에서부터 탐색해 들어갔을때 몇번째에 등장하는지를 이용함.
 
-			/*
-			printf("\n\n");
-			printf("find 0 = %d \n", find[0]);
-			printf("find 1 = %d \n", find[1]);
-			printf("find 2 = %d \n", find[2]);
-			printf("find 3 = %d \n", find[3]);
-			printf("\n\n");
-			*/
 
 
 			for (int i = 0; i < total_frames; i++) {
-				if (find[(frames[i])] == -1) {
-					frames[i] = pages[m];
-					z = 1;
-					break;
+				if (find[(frames[i])] == -1) { //만약 find를 쭉 읽는데, find값이 -1이란 이야기는 해당 숫자는 뒤에서 사용되어진적이 없다는 이야기.
+					frames[i] = pages[m]; // 그냥 발견되어진 놈을 빼버림, 어차피 뒤에 접근 안한 다른 숫자가 있더라도 , 그놈을 뺴나 이놈을 빼나 
+										  // 다시 접근할 일이 없는 놈들이기 때문에 hit, fault값은 동일함.
+					z = 1; // 타 if문을 돌아가지 않기위해서 변경
+					break; // 더 이상의 작업이 필요없기 때문에 break . 여기서 필요없다고 하는것들은 = 하면 안된다 라는 말과도 동치함
 				}
 			}
-			if (z == 0) {
-				int far = -1;
-				int k = 0;
+			if (z == 0) { //pagefault가 났고, 안에 빈 공간도 없고, 더 이상 등장 안하는놈도 없는 상황
+				int far = -1; //far 변수를 선언과 초기화함. 이놈은 가장 먼놈을 찾기위한 변수, page의 맨앞서부터 가장 멀리 떨어진 거리.
+				int k = 0; //k는 가장 먼놈을 찾기위한 변수인데 해당 숫자를 찾기위한 변수.
 				for (int i = 0; i < total_frames; i++) {
-					if (find[(frames[i])] > far) {
-						far = find[(frames[i])];
-						k = frames[i];
+					if (find[(frames[i])] > far) { //어느 숫자가 이전 어느 숫자보다 더 멀리 떨어져있다면
+						far = find[(frames[i])]; //해당 떨어진 거리와
+						k = frames[i]; //해당 숫자를 저장해둠
 					}
 				}
-				//printf("far is %d\n" ,far);
-				//frames[(find[far])] = pages[m];
-				for (int i = 0; i < total_frames; i++) {
-					if (frames[i] == k) {
-						frames[i] = pages[m];
+
+				for (int i = 0; i < total_frames; i++) { //전체 프레임을 탐색함
+					if (frames[i] == k) { //프레임의 안의 어느 숫자가, 가장 멀리 떨어져 있던 숫자라면?
+						frames[i] = pages[m]; //해당 프레임을 fault난 부분의 page로 교체함.
 						break;
 					}
 				}
@@ -104,40 +102,17 @@ void belady(int total_frames, int pcount) {
 
 
 
-	printf("Page hits : %d \n", pagehit);
-	printf("Page faults : %d \n", pagefault);
-	double rate = ((double)pagefault / (double)pcount);
-	printf("Page fault rate %d / %d : %f \n", pagefault, pcount, rate * 100);
+	printf("Page hits: %d \n", pagehit); //page hit 수를 출력하기 위함
+	printf("Page faults: %d \n", pagefault); //page fault 수를 출력하기 위함
+	double rate = ((double)pagefault / (double)pcount); //fault 확률을 실수형으로 계산하기 위함
+	printf("Page fault rate: %d / %d = %f%% \n", pagefault, pcount, rate * 100); //fault 확률을 출력하기 위함
 
-
-	printf("frame[0] = %d \n", frames[0]);
-	printf("frame[1] = %d \n", frames[1]);
-	printf("frame[2] = %d \n", frames[2]);
-	printf("frame[3] = %d \n", frames[3]);
-	//printf("frame[4] = %d \n", frames[4]);
-
-
-
-	/*
-	for (int i = 0; i < 1001; i++) { // 0~1000 까지의 수가 있는것을 알기때문에 1~1000까지 for문을 돌림
-	int samecount = 0; //pages 배열내에서
-	for (int j = 0; j < pcount; j++) {
-	if (pages[j] == i)
-	samecount++;
-	}
-	num[i] = samecount;
-	}
-	*/
-
-
-	//printf("1000 spotted : %d \n", num[1000]);
 
 }
 
 
-void LRU(int total_frames, int pcount) {
-	//printf("hello %d \n", total_frames);
-	//printf("page 0 is %d\n", pages[0]);
+void lru(int total_frames, int pcount) { //lru 알고리즘
+
 
 	int a = 0, b = 0;
 	int pagefault = 0;
@@ -148,7 +123,7 @@ void LRU(int total_frames, int pcount) {
 		frames[i] = -1; // total_frames 만큼의 frame공간들을 -1로 초기화
 
 	for (int m = 0; m < pcount; m++) { //page와 frame을 비교하기 위해서, 전체 페이지를 읽기위한 for문
-		a = 0, b = 0; //a와 b는 page fault가 난것과 안난것을 구별하기 위한 if문을 위한 변수.
+		a = 0, b = 0; //a와 b는 page fault가 난 경우의 수를 구별하기위한 if문을 위한 변수.
 		for (int n = 0; n < total_frames; n++) { //page와 frame을 비교하기위해서, 전체 프레임을 읽기위한 for문
 			if (pages[m] == frames[n]) { //페이지와 frame을 비교했을때 같다면
 				pagehit++; //page hit가 난것으로 pagehit를 변수를 증가
@@ -162,7 +137,7 @@ void LRU(int total_frames, int pcount) {
 					}
 				}
 
-				a = 1, b = 1; //page hit가 났으므로, fault부분의 if문을 돌릴 필요가 없게.
+				a = 1, b = 1; //page hit가 났으므로, fault부분의 if문을 돌릴 필요가 없게됌.
 				break; //더 이상의 작업이 필요없기 때문에 break함.
 			}
 		}
@@ -187,85 +162,79 @@ void LRU(int total_frames, int pcount) {
 		}
 
 	}
-	printf("Page hits : %d \n", pagehit);
-	printf("Page faults : %d \n", pagefault);
-	double rate = ((double)pagefault / (double)pcount);
-	printf("Page fault rate %d / %d : %f \n", pagefault, pcount, rate * 100);
+	printf("Page hits: %d \n", pagehit); //page hit 수를 출력하기 위함
+	printf("Page faults: %d \n", pagefault); //page fault 수를 출력하기 위함
+	double rate = ((double)pagefault / (double)pcount); //fault 확률을 실수형으로 계산하기 위함
+	printf("Page fault rate: %d / %d = %f%% \n", pagefault, pcount, rate * 100); //fault 확률을 출력하기 위함
 
 
-	printf("frame[0] = %d \n", frames[0]);
-	printf("frame[1] = %d \n", frames[1]);
-	printf("frame[2] = %d \n", frames[2]);
-	printf("frame[3] = %d \n", frames[3]);
-	printf("frame[4] = %d \n", frames[4]);
-
-	//printf("tmp = %d \n", tmp);
 
 
 
 }
 
 
-int main(void) {
+int main(int argc, char*argv[]) {
 
 
-	//int total_frames = atoi(argv[2]);
-	int total_frames = 100; //3 이라고 가정
-	int temp = -1;
-	char tempi[10];
+	int total_frames = atoi(argv[2]); //받은 두번째 인자를 정수형으로 바꿔서 total_frame에 저장.
 
 
-	int pcount = 0;
-	int wcount = 0;
-	int rcount = 0;
+	if (total_frames > 1000000) { //100만보다 큰수가 들어올경우
+		printf("please enter a frame below 1000000 \n"); //더 작은 값을 입력해달라는 메시지를 출력함
+	}
 
-	//int pages[100000];
-	//int frames[10000];
+	int temp = -1; // temp값을 -1로 초기화 해둠, 숫자를 받을 변수
+	char tempi[10]; // tempi배열을 만들어둠. 문자열을 받을 변수. write 와 read는 10보다는 작기 때문에 크기를 대충 10으로 잡음
+
+
+	int pcount = 0; //page수를 셀 변수
+	int wcount = 0; //write수를 셀 변수
+	int rcount = 0; //read수를 셀 변수
 
 
 
-	FILE *fp;
+	FILE *fp; //FILE을 열기위해 사용.
 
-	fp = fopen("2.txt", "r");
+	fp = fopen("access.list", "r"); //access.list 파일을 읽기형식으로 염
 
-	while (EOF != fscanf(fp, "%d %s", &temp, tempi)) {
-		//while (!feof(fp)) {
-		//fscanf(fp, "%d %s", &temp, tempi);
+	while (EOF != fscanf(fp, "%d %s", &temp, tempi)) { //EOF, 파일의 끝을 만날경우 while문을 멈춤. 숫자를 temp에 쓰고 , 문자를 tempi에 씀
 
-		if (temp != -1)
-			pcount++;
-		if (!strcmp(tempi, "read"))
-			rcount++;
-		if (!strcmp(tempi, "write"))
-			wcount++;
-		pages[pcount - 1] = temp;
+													   //while (!feof(fp)) {			재미있던게 해당 feof함수는 비주얼 환경에서는 올바르게 작동했으나
+													   //fscanf(fp, "%d %s", &temp, tempi);    리눅스 환경에서는 마지막줄을 두번씩 읽는 상황이 벌어졌었음. 
+
+
+		if (temp != -1) //temp값이 1이 아니면 읽었다는 이야기이 므로
+			pcount++; //page 수를 증가
+		if (!strcmp(tempi, "read")) //tempi가 read일 경우
+			rcount++; //read수를 증가
+		if (!strcmp(tempi, "write")) //tempi가 write일 경우
+			wcount++; //write수를 증가
+		pages[pcount - 1] = temp; //pages배열에 access.list파일에서 읽어진 숫자들을 집어넣음.
 
 	}
-	printf("Total number of access %d\n", pcount);
-	printf("Total number of read: %d\n", rcount);
-	printf("Total number of write: %d\n", wcount);
-
-	/*
-	for (int i = 0; i <= pcount; i++) {
-	printf("Page %d is %d \n",i, pages[i]);
-	}
-	*/
-
-	fclose(fp);
+	printf("Total number of access: %d\n", pcount); //전체 access된 수를 출력
+	printf("Total number of read: %d\n", rcount); //전체 read된 수를 출력
+	printf("Total number of write: %d\n", wcount); //전체 write된 수를 출력
 
 
-	LRU(total_frames, pcount);
-	belady(total_frames, pcount);
+	fclose(fp); //파일을 닫음
 
 
 
-	/*
-	if (!strcmp(argv[1], "LRU"))
-	LRU(total_frames, pcount);
+
+	if (!strcmp(argv[1], "lru")) //받은 첫번째 인자가 lru가 일경우
+		lru(total_frames, pcount); //lru 알고리즘 실행
+
+	else if (!strcmp(argv[1], "belady")) //받은 첫번째 인자가 belady일경우
+		belady(total_frames, pcount); //belady 알고리즘 실행
+
 	else
-	printf("ERROR \n");
-	*/
+		printf("Algorithm ERROR \n"); //다른 값들이 입력되었을 경우, 알고리즘 에러 메시지 출력
+
 
 	return 0;
 
 }
+
+
