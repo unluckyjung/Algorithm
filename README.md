@@ -1,3 +1,3 @@
 # Algorithm
 
-It is for my Self PS Study.
+It is for my self PS study.
