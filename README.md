@@ -1,3 +1,3 @@
 # Algorithm
 ***
-It is formy Self PS Study.
+It is for my Self PS Study.
