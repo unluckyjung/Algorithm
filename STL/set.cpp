@@ -13,8 +13,10 @@ int main()
     
     cout << *s.begin() <<endl;
 
-    if (s.find(6) != s.end())
-        cout << "exist!" << endl;
+	if (s.find(6) != s.end()) {
+		cout << "exist!" << endl;
+		cout << *s.find(5) - *s.begin();    //5가 위치한 인덱스 1 출력
+	}
     //없다면 s.end()리턴.
 
     s.size();
