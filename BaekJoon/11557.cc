@@ -3,9 +3,10 @@ using namespace std;
 
 void alcohol(map<int, string> &univ)
 {
-    auto it = univ.end();
-    cout << (--it)->second << "\n";
-    //맨뒤 map 출력.
+    // auto it = univ.end();
+    // cout << (--it)->second << "\n";
+    cout << univ.rbegin()->second;
+    // 맨뒤 map 출력.
 
     univ.clear();
     //map 모든 원소 삭제.
