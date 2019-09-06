@@ -22,14 +22,23 @@ int main()
     if (auto it = m.find('C') == m.end()) //찾는 값이 없을경우 end()를 리턴한다.
         cout << "NULL!" << endl;
 
-    cout << m['C'] << endl; //이런식으로 없는 Key값에 대해서 참조를 해버리면, value값이 0으로 자동으로 생성된다.
+    cout << m['C'] << endl; 
+    //이런식으로 없는 Key값에 대해서 참조를 해버리면, value값이 0으로 자동으로 생성된다.
 
     if (auto it = m.find('C') != m.end()) //C가 존재한다고 나온다.
         cout << "C is exist!" << endl;
 
-    for (auto it = m.begin(); it != m.end(); ++it)
+    cout << m.find('A')->second << endl;
+    // A value 100 출력.
+
+    for (auto it = m.begin(); it != m.end(); ++it) //모든 key, value 출력.
     {
         cout << it->first << " " << it->second << endl;
     }
+
+    auto it = m.end();
+    cout << (--it)->first << endl;     //맨 뒤의 Key 출력.
+    cout << m.rbegin()->first << endl; //맨 뒤의 key 출력.
+
     return 0;
 }
