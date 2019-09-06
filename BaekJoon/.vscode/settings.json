@@ -3,6 +3,7 @@
         "algorithm": "cpp",
         "xiosbase": "cpp",
         "random": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "cstdlib": "cpp"
     }
 }
