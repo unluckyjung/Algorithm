@@ -15,7 +15,7 @@ int main()
 
 	if (s.find(5) != s.end()) {
 		cout << "exist!" << endl;
-		cout << *s.find(5) - *s.begin();    //5 - 2 = 3
+		cout << *s.find(5) - *s.begin() <<endl;    //5 - 2 = 3
 	}
     //없다면 s.end()리턴.
 
