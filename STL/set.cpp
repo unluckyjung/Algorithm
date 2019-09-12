@@ -7,15 +7,15 @@ int main()
     //중복 X , 정렬되어있음.
     set<int> s;
 
-    s.insert(6);
+    s.insert(10);
     s.insert(5);
-    s.insert(4);
+    s.insert(2);
     
     cout << *s.begin() <<endl;
 
-	if (s.find(6) != s.end()) {
+	if (s.find(5) != s.end()) {
 		cout << "exist!" << endl;
-		cout << *s.find(5) - *s.begin();    //5가 위치한 인덱스 1 출력
+		cout << *s.find(5) - *s.begin();    //5 - 2 = 3
 	}
     //없다면 s.end()리턴.
 
