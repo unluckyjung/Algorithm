@@ -10,6 +10,7 @@ int main()
     map<char, int> m;
 
     m.insert(make_pair('A', 100));
+    //  m.insert({'A', 100});
     //  m:(A,0)
     //  key = 4, value = 0
 
