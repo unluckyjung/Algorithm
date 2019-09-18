@@ -16,7 +16,7 @@ int main() {
 	cout << pq_up.top() << "\n";	//	53
 
 	priority_queue<int, vector<int>, greater<int>> pq_down;
-	//greater를 주어서, 내림차순 정렬.
+	//greater를 주어서, 오름차순 정렬.
 
 	pq_down.push(5);
 	pq_down.push(23);
