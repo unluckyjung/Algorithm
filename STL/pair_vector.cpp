@@ -16,8 +16,12 @@ int main()
 
     for (auto i = pair_vec.begin(); i != pair_vec.end(); ++i)
     {
-        cout << i->second << endl;
-        //여기서 i는 pair의 iterator이다. 위의경우와 차이를 확실히 알아두자.
+        cout << i->second << endl;  //Hi, Hello
+        //여기서 i는 pair의 iterator이다. -> 를 사용해야한다.
+        //위의경우와 차이를 확실히 알아두자.
+
+        cout << (*i).second <<endl; //Hi, Hello
+        //위와 완전히 같다.
     }
     return 0;
 }
