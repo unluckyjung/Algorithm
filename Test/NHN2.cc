@@ -19,26 +19,33 @@ int main() {
 			int num;
 			cin >> num;
 			l.push_back(num);
+			//리스트에다가 해당 숫자를 넣고
 			m[num]++;
+			//해당 숫자 등장 빈도수 저장.
 		}
 		else {
+			//dequeue
 			if (l.empty()) {
 				cout << "-1 ";
 			}
 			else {
+
 				int MAX = INT_MIN;
 
 				for (auto it = m.begin(); it != m.end(); ++it) {
 					MAX = max(MAX, it->second);
+					//dequeue인경우, 가장 자주 등장한 숫자의 "빈도수"를 찾음.
 				}
 
 
 				for (auto it = l.begin(); it != l.end(); ++it) {
 					if (m[*it] == MAX) {
+						//리스트의 앞에서 부터 찾다가, 등장한숫자의 빈도수가 가장 큰 경우
 						cout << *it << " ";
-						//vec.push_back(*it);
 						m[*it]--;
+						//출력하고, 빈도수를 줄임.
 						it = l.erase(it);
+						//그리고 해당 노드를 삭제함.
 						break;
 					}
 
@@ -47,8 +54,5 @@ int main() {
 		}
 	}
 
-	//for (auto it : vec) {
-	//	cout << it << " ";
-	//}
 	return 0;
 }
