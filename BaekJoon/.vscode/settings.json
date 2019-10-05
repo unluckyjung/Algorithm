@@ -5,6 +5,7 @@
         "random": "cpp",
         "iostream": "cpp",
         "cstdlib": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "xstring": "cpp"
     }
 }
