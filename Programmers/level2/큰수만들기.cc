@@ -37,3 +37,18 @@ string solution(string number, int k) {
 
 	return answer;
 }
+
+string solution2(string number, int k) {
+	int size = number.size() - k;
+	string answer;
+	for (int i = 0; i < (int)number.size(); ++i) {
+		while (!answer.empty() && k > 0 && answer.back() < number[i]) {
+			answer.pop_back();    k--;
+		}
+		answer.push_back(number[i]);
+	}
+
+	while (answer.size() != size) answer.pop_back();
+
+	return answer;
+}
