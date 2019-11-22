@@ -23,3 +23,23 @@ int solution(vector<int> numbers, int target) {
 
 	return answer;
 }
+
+
+
+void dfs(int cnt , int sum, const vector<int> &num) {
+	if (cnt >= Size) {
+		if(sum == tg)answer++;
+		return;
+	}
+
+	dfs(cnt + 1, sum + num[cnt], num);
+	dfs(cnt + 1, sum - num[cnt], num);
+	return;
+}
+
+int solution2(vector<int> numbers, int target) {
+	tg = target;
+	Size = numbers.size();
+	dfs(0, 0, numbers);
+	return answer;
+}
