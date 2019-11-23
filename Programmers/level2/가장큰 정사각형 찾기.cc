@@ -31,3 +31,32 @@ int solution(vector<vector<int>> board)
 	answer *= answer;
 	return answer;
 }
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int dp[1001][1001];
+
+int solution2(vector<vector<int>> board)
+{
+	int answer = 0;
+	for (int i = 0; i < board.size(); ++i) {
+		for (int ii = 0; ii < board[0].size(); ++ii) {
+
+			if (i == 0 || ii == 0) {
+				dp[i][ii] = board[i][ii];
+				answer = max(answer, dp[i][ii]);
+				continue;
+			}
+			if (board[i][ii] == 1) {
+				dp[i][ii] = min({ dp[i][ii - 1], dp[i - 1][ii], dp[i - 1][ii - 1] }) + 1;
+				answer = max(answer, dp[i][ii]);
+			}
+		}
+	}
+
+	return answer* answer;
+}
