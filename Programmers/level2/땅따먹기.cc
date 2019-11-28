@@ -55,3 +55,28 @@ int solution2(vector<vector<int> > land)
 	}
 	return answer;
 }
+
+
+int solution3(vector<vector<int> > land)
+{
+	int answer = 0;
+	dp[0][0] = land[0][0];
+	dp[0][1] = land[0][1];
+	dp[0][2] = land[0][2];
+	dp[0][3] = land[0][3];
+
+	for (int i = 1; i < land.size(); ++i) {
+
+		for (int cur_index = 0; cur_index < 4; ++cur_index) {
+			int MAX = 0;
+			for (int before_index = 0; before_index < 4; ++before_index) {
+				if (cur_index == before_index)continue;
+				MAX = max(MAX,land[i][cur_index] + dp[i - 1][before_index]);
+			}
+			dp[i][cur_index] = MAX;
+			answer = max(answer, dp[i][cur_index]);
+		}
+	}
+
+	return answer;
+}
