@@ -21,3 +21,30 @@ int main()
 
 	return 0;
 }
+
+#include<iostream>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int sum = 0;
+
+	for (int i = 0; i < 8; ++i) {
+		string str;	cin >> str;
+		int str_index = 0;
+
+		if (i % 2 != 0) str_index++;
+
+		for (; str_index < 8; str_index += 2) {
+			if (str[str_index] == 'F')sum++;
+		}
+	}
+
+	cout << sum;
+	return 0;
+}
