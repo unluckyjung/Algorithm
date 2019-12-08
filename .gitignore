@@ -4,3 +4,6 @@ BaekJoon/.vscode/settings.json
 
 BaekJoon/test.cc
 /Test
+.vscode/launch.json
+
+.vscode/tasks.json
