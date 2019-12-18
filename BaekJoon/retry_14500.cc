@@ -68,6 +68,8 @@ int main()
     cin.tie(NULL);
     cout.tie(NULL);
 
+    freopen("input.txt", "r", stdin);
+
     cin >> n >> m;
     input();
 
