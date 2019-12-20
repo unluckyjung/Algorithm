@@ -1,9 +1,15 @@
 *.exe
+
 test.cpp
 BaekJoon/.vscode/settings.json
 
 BaekJoon/test.cc
 /Test
-.vscode/launch.json
 
+.vscode/
+.vscode/launch.json
 .vscode/tasks.json
+
+# **/*.js 모든 디렉토리의 .js 파일 무시
+# vscode/*
+# !vscode/no    /* 후행 개행은 중요하다. no라는 폴더는 살아 남을 수 있다.
