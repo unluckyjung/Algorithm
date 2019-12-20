@@ -43,11 +43,11 @@ int main()
 
     input();
 
-    for (int i = 0; i < n; ++i)
-    {   
-        start = i;
-        dfs(i, 0, 0);
-    }
+    // for (int i = 0; i < n; ++i)
+    // {   
+        //start = i;
+    dfs(0, 0, 0);
+    //}
 
     cout << answer <<"\n";
     return 0;
