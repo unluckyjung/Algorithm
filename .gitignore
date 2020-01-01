@@ -5,6 +5,8 @@ BaekJoon/.vscode/settings.json
 
 BaekJoon/test.cc
 /Test
+**/input.txt
+**/*.exe
 
 .vscode/
 .vscode/launch.json
