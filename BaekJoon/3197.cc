@@ -1,52 +1,50 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+int n, m;
 char board[1501][1501];
-bool visit[1501][1501];
+bool b_visit[1501][1501];
 bool w_visit[1501][1501];
-
-
-
-int w_time[1501][1501];
-bool w_used[1501][1501];
-
-
-
 
 int dx[] = { -1,1,0,0 };
 int dy[] = { 0,0,-1,1 };
-
-int n, m;
 int cnt;
 
-int L_x, L_y;
-bool find_L;
+queue<pair<int, int> > bq;
+queue<pair<int, int> > bnq;
 
+queue<pair<int, int> > wq;
+queue<pair<int, int> > wnq;
 
-queue<tuple<int, int, int>> wq;
-//x, y , cnt;
+bool fist_L;
 
 void input() {
     cin >> n >> m;
-
     for (int i = 0; i < n; ++i) {
-        string line;    cin >> line;
         for (int ii = 0; ii < m; ++ii) {
-            board[i][ii] = line[ii];
-            if (board[i][ii] == '.'){
-                w_visit[i][ii] =true;
-                wq.push({i,ii,0});
+            cin >> board[i][ii];
+
+            if (board[i][ii] == 'L') {
+                if (!fist_L) {
+                    b_visit[i][ii] = true;
+                    bq.push(make_pair(i, ii));
+                    fist_L = true;
+                }
+                else {
+                    w_visit[i][ii] = true;
+                    wq.push(make_pair(i, ii));
+                }
             }
-            if (!find_L && board[i][ii] == 'L') {
-                L_x = i;
-                L_y = ii;
-                find_L = true;
+            else if (board[i][ii] == '.') {
+                w_visit[i][ii] = true;
+                wq.push(make_pair(i, ii));
             }
         }
     }
 }
 
 void output() {
+    cout << "\n\n";
     for (int i = 0; i < n; ++i) {
         for (int ii = 0; ii < m; ++ii) {
             cout << board[i][ii];
@@ -56,101 +54,73 @@ void output() {
 }
 
 
-void can_go() {
-    queue<pair<int, int > > q;
-    memset(visit, false, sizeof(visit));
-    visit[L_x][L_y] = true;
-    q.push({ L_x, L_y });
+void b_bfs() {
 
-    while (!q.empty()) {
-        auto cur = q.front();   q.pop();
+    while (!bq.empty()) {
+        pair<int, int> cur = bq.front();    bq.pop();
         int cur_x = cur.first;
         int cur_y = cur.second;
-
-        if (cur_x != L_x and cur_y != L_y and board[cur_x][cur_y] == 'L') {
-            cout << cnt << "\n";
-            exit(0);
-        }
 
         for (int dir = 0; dir < 4; ++dir) {
             int nx = cur_x + dx[dir];
             int ny = cur_y + dy[dir];
+            if (nx < 0 || nx >= n || ny < 0 || ny >= m)continue;
+            if (b_visit[nx][ny])continue;
 
-            if (nx < 0 or nx >= n or ny < 0 or ny >= m)continue;
-            if (visit[nx][ny])continue;
-            if (board[nx][ny] == 'X')continue;
+            if (board[nx][ny] == 'L') {
+                cout << cnt << "\n";
+                exit(0);
+            }
 
-            visit[nx][ny] = true;
-            q.push({ nx,ny });
+            if (board[nx][ny] == 'X') {
+                b_visit[nx][ny] = true;
+                bnq.push(make_pair(nx, ny));
+                continue;
+            }
+            b_visit[nx][ny] = true;
+            bq.push(make_pair(nx, ny));
         }
     }
+    bq = bnq;
+    while (!bnq.empty())  bnq.pop();
 }
 
-// void sink() {
-//     cnt++;
+void sink() {
+    while (!wq.empty()) {
+        pair<int, int> cur = wq.front();    wq.pop();
+        int cur_x = cur.first;
+        int cur_y = cur.second;
 
-//     for (int i = 0; i < n; ++i) {
-//         for (int ii = 0; ii < m; ++ii) {
-//             if (w_used[i][ii])  continue;
-//             if (board[i][ii] == '.') {
-//                 if (w_time[i][ii] > cnt)continue;
-//                 w_used[i][ii] = true;
-//                 //w_visit[i][ii] = cnt;
-
-//                 for (int dir = 0; dir < 4; ++dir) {
-//                     int nx = i + dx[dir];
-//                     int ny = ii + dy[dir];
-
-//                     if (nx < 0 or nx >= n or ny < 0 or ny >= m)continue;
-//                     if (w_used[nx][ny]) continue;
-//                     if (w_time[nx][ny] >= cnt)continue;
-//                     if (board[nx][ny] != 'X')continue;
-//                     w_time[nx][ny] = cnt+1;
-
-//                     board[nx][ny] = '.';
-//                 }
-//             }
-//         }
-//     }
-
-// }
-
-
-void sink_2(){
-    while(!wq.empty()){
-        auto cur = wq.front();
-        if(get<2>(cur) > cnt) {
-            cnt++;
-            return;
-        }
-        wq.pop();
-
-        for(int dir = 0 ; dir<4; ++dir){
-            int nx = get<0>(cur) + dx[dir];
-            int ny = get<1>(cur) + dy[dir];
-            if (nx < 0 or nx >= n or ny < 0 or ny >= m)continue;
+        for (int dir = 0; dir < 4; ++dir) {
+            int nx = cur_x + dx[dir];
+            int ny = cur_y + dy[dir];
+            if (nx < 0 || nx >= n || ny < 0 || ny >= m)continue;
             if (w_visit[nx][ny])continue;
-            if (board[nx][ny] != 'X')continue;
 
+            if (board[nx][ny] == 'X') {
+                w_visit[nx][ny] = true;
+                board[nx][ny] = '.';
+                wnq.push(make_pair(nx, ny));
+                continue;
+            }
             w_visit[nx][ny] = true;
-            board[nx][ny] = '.';
-            wq.push({nx,ny, cnt+1});
+            wq.push(make_pair(nx, ny));
         }
     }
+    wq = wnq;
+    while (!wnq.empty())  wnq.pop();
 }
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     freopen("input.txt", "r", stdin);
-    memset(w_time, -1, sizeof(w_time));
-
     input();
-
-     while(1){
-         can_go();
-         sink_2();
-     }
-
+    while (1) {
+        //output();
+        b_bfs();
+        cnt++;
+        sink();
+    }
     return 0;
 }
