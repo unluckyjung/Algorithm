@@ -57,6 +57,29 @@ void update_node(int node, int s, int e, int qs, int qe, ll data) {
 
 }
 
+#if 0
+//update node + new node
+//근데 더 느림 288 > 408
+void update_node(int node, int s, int e, int qs, int qe, ll data) {
+    propagate(node, s, e);
+
+    if (qs > e or s > qe) return;
+    if (qs <= s and e <= qe) {
+        tree[node] += data * ((ll)e - s + 1);
+        if (s != e) {
+            lazy[node * 2] += data;
+            lazy[node * 2 + 1] +=data;
+        }
+        return;
+    }
+    int mid = (s + e) / 2;
+    update_node(node * 2, s, mid, qs, qe, data);
+    update_node(node * 2 + 1, mid + 1, e, qs, qe, data);
+    tree[node] = tree[node * 2] + tree[node * 2 + 1];
+
+}
+#endif
+
 ll query(int node, int s, int e, int qs, int qe) {
     propagate(node, s, e);
 
