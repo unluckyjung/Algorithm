@@ -13,12 +13,12 @@ void prime_set() {
 }
 
 int solve(int n) {
-    int patition = 0;
+    int partition = 0;
     for (int i = 3; i <= n / 2; i += 2) {
         if (visit[i] != 1 or visit[n - i] != 1)continue;
-        patition++;
+        partition++;
     }
-    return patition;
+    return partition;
 }
 
 void input() {
