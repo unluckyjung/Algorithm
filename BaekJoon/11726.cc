@@ -1,25 +1,28 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-//백준 2×n 타일링 11726
-//https://www.acmicpc.net/problem/11726
 
-int ans[1002];
-int n;
-int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+int dp[1001];
+int n, mod = 10007;
 
-	cin >> n;
-	ans[1] = 1;
-	ans[2] = 2;
+int solve(int n) {
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = (dp[i - 1] + dp[i - 2]) % mod;
+    }
+    return dp[n];
+}
 
-	//점화식
-	//ans[i] = (ans[i-2] + ans[i-1]) % 10007
-	for (int i = 3; i <= n; ++i) {
-		ans[i] = (ans[i - 2] + ans[i - 1]) % 10007;
-	}
+void input() {
+    dp[0] = 1;
+    dp[1] = 1;
+    cin >> n;
+}
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    freopen("input.txt", "r", stdin);
+    cin.tie(NULL);  cout.tie(NULL);
 
-	cout << ans[n];
-	return 0;
+    input();
+    cout << solve(n);
+    return 0;
 }
