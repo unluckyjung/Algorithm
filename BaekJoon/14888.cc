@@ -5,6 +5,28 @@ int arr[12], oper[4];
 int n;
 int MAX = INT_MIN, MIN = INT_MAX;
 
+#if 01
+void dfs(int cur, int cnt) {
+
+    if (cnt == n) {
+        MAX = max(MAX, cur);
+        MIN = min(MIN, cur);
+        return;
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        if (oper[i]) {
+            oper[i]--;
+            if(i == 0) dfs(cur + arr[cnt], cnt + 1);
+            else if (i == 1) dfs(cur - arr[cnt], cnt + 1);
+            else if (i == 2) dfs(cur * arr[cnt], cnt + 1);
+            else if (i == 3) dfs(cur / arr[cnt], cnt + 1);
+            oper[i]++;
+        }
+    }
+}
+
+#else
 void dfs(int cur, int cnt) {
 
     if (cnt == n) {
@@ -40,6 +62,7 @@ void dfs(int cur, int cnt) {
     }
 }
 
+#endif
 void solve() {
     dfs(arr[0], 1);
     cout << MAX << "\n" << MIN << "\n";
