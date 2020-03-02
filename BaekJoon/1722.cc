@@ -1,3 +1,80 @@
+#if 01
+
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+vector<int> vec;
+int n;
+
+int get_idx(int k) {
+    for (int i = 0; i <= (int)vec.size(); ++i) {
+        if (k != vec[i])continue;
+        vec.erase(vec.begin() + i);
+        return i;
+    }
+    return -1;
+}
+
+ll get_fac(int num) {
+    ll ret = 1;
+    for (ll i = 1; i <= num; ++i) 
+        ret *= i;
+
+    return ret;
+}
+
+void solve_q2() {
+    int k, fac_n = n - 1;
+    int idx;
+    ll sum = 0;
+    for (int i = fac_n; i >= 0; --i) {
+        cin >> k;
+        idx = get_idx(k);
+        sum += idx * get_fac(i);
+    }
+    cout << sum + 1;
+}
+
+void solve_q1() {
+    ll k;
+    int fac_n = n - 1;
+    cin >> k;
+    k--;
+
+    for (int i = fac_n; i >= 0; --i) {
+        int idx = k / get_fac(i);
+        k %= get_fac(i);
+        cout << vec[idx] << " ";
+        vec.erase(vec.begin() + idx);
+    }
+}
+
+void input() {
+    int quiz;
+    cin >> n >> quiz;
+
+    for (int i = 1; i <= n; ++i)   vec.push_back(i);
+
+    if (quiz == 1) solve_q1();
+    else solve_q2();
+    
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    freopen("input.txt", "r", stdin);
+    cin.tie(NULL);  cout.tie(NULL);
+
+    input();
+
+    return 0;
+}
+
+
+#else
+
 #include <bits/stdc++.h>
 #define ll long long
 
@@ -90,3 +167,5 @@ int main()
     input();
     return 0;
 }
+
+#endif
