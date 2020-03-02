@@ -9,30 +9,12 @@ bool row[10][11];
 bool col[10][11];
 bool box[10][11];
 
-int blank;
+bool find_answer;
+
 stack<pair<int, int> > STACK;
 
 int find_box_num(int nx, int ny) {
-	int box_num = 0;
-	if (nx < 3) {
-		box_num = 0;
-		if (ny < 3) box_num;
-		else if (ny < 6) box_num += 1;
-		else if (ny < 9) box_num += 2;
-	}
-	else if (nx < 6) {
-		box_num = 3;
-		if (ny < 3) box_num;
-		else if (ny < 6) box_num += 1;
-		else if (ny < 9) box_num += 2;
-	}
-	else if (nx < 9) {
-		box_num = 6;
-		if (ny < 3) box_num;
-		else if (ny < 6) box_num += 1;
-		else if (ny < 9) box_num += 2;
-	}
-
+	int box_num = (nx/3) * 3 + (ny/3);
 	return box_num;
 }
 
@@ -55,42 +37,42 @@ void output() {
 	}
 }
 
-void dfs(int black_cnt) {
-	if (black_cnt == 0) {
+void dfs() {
+	if (find_answer)return;
+
+	if (STACK.empty()) {
 		output();
-		exit(0);
-	}
-
-	while (!STACK.empty()) {
-		pp cur = STACK.top();	STACK.pop();
-
-		int nx = cur.first;
-		int ny = cur.second;
-
-		for (int i = 1; i <= 9; ++i) {
-			if (row[nx][i])continue;
-			if (col[ny][i])continue;
-			if (box_check(nx, ny, i))continue;
-
-			row[nx][i] = true;
-			col[ny][i] = true;
-			box_set(nx, ny, i, true);
-			board[nx][ny] = i;
-
-			dfs(black_cnt - 1);
-
-			row[nx][i] = false;
-			col[ny][i] = false;
-			box_set(nx, ny, i, false);
-			board[nx][ny] = 0;
-		}
-		STACK.push(cur);
+		find_answer = true;
 		return;
 	}
+
+	pp cur = STACK.top();	STACK.pop();
+
+	int nx = cur.first;
+	int ny = cur.second;
+
+	for (int i = 1; i <= 9; ++i) {
+		if (row[nx][i])continue;
+		if (col[ny][i])continue;
+		if (box_check(nx, ny, i))continue;
+
+		row[nx][i] = true;
+		col[ny][i] = true;
+		box_set(nx, ny, i, true);
+		board[nx][ny] = i;
+
+		dfs();
+
+		row[nx][i] = false;
+		col[ny][i] = false;
+		box_set(nx, ny, i, false);
+		board[nx][ny] = 0;
+	}
+	STACK.push(cur);
 }
 
 void solve() {
-	dfs(blank);
+	dfs();
 }
 
 void input() {
@@ -100,10 +82,7 @@ void input() {
 			cin >> value;
 			board[i][ii] = value;
 
-			if (value == 0) {
-				STACK.push({ i,ii });
-				blank++;
-			}
+			if (value == 0) STACK.push({ i,ii });
 			else {
 				row[i][value] = true;
 				col[ii][value] = true;
@@ -115,8 +94,7 @@ void input() {
 
 int main() {
 	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+	cin.tie(NULL);	cout.tie(NULL);
 
 	freopen("input.txt", "r", stdin);
 	input();
