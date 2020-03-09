@@ -1,3 +1,63 @@
+#if 01
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int dp[1001][4];
+int color[1001][4];
+int N;
+int answer = INT_MAX;
+
+void make_dp(int n, int m) {
+    dp[n][m] = INT_MAX;
+
+    for (int k = 1; k <= 3; ++k) {
+        if (k == m)continue;
+        dp[n][m] = min(dp[n][m], dp[n - 1][k] + color[n][m]);
+    }
+}
+
+void solve() {
+    for (int i = 2; i <= N; ++i) {
+        for (int ii = 1; ii <= 3; ++ii) {
+            make_dp(i, ii);
+        }
+    }
+    cout << min({ dp[N][1], dp[N][2], dp[N][3] }) << "\n";
+}
+
+void init(int house) {
+    for (int i = 1; i <= 3; ++i) {
+        cin >> color[house][i];
+    }
+}
+
+void input() {
+    cin >> N;
+    for (int i = 1; i <= N; ++i) {
+        init(i);
+    }
+    dp[1][1] = color[1][1];
+    dp[1][2] = color[1][2];
+    dp[1][3] = color[1][3];
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);  cout.tie(NULL);
+    freopen("input.txt", "r", stdin);
+
+    input();
+    solve();
+
+    return 0;
+}
+
+
+#else
+
+
 #include <bits/stdc++.h>
 using namespace std;
 //백준 RGB거리 1149
@@ -43,3 +103,6 @@ int main()
 
 	return 0;
 }
+
+
+#endif
