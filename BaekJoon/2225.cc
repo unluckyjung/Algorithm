@@ -1,31 +1,37 @@
 #include <bits/stdc++.h>
 #define ll long long
-
 using namespace std;
 
-ll dp[202][202] = { 1 };
-const ll mod = 1000000000;
-int n, k;
+const ll mod = 1000000000LL;
+int N, K;
 
+ll dp[201][201];
+
+void init() {
+    for (int i = 0; i <= 200; ++i) {
+        dp[0][i] = 1;
+    }
+}
+
+void make_dp(int n, int k) {
+    for (int m = 0; m <= n; ++m) {
+        dp[n][k] += dp[n - m][k - 1] % mod;
+    }
+    dp[n][k] %= mod;
+}
 
 void solve() {
-    for (int i = 1; i <= k; ++i) {
-        for (int ii = 0; ii <= n; ++ii) {
-            
-            for (int iii = 0; iii <= ii; ++iii) {
-                dp[i][ii] += dp[i - 1][ii - iii] % mod;
-                dp[i][ii] %= mod;
-            }
-
+    for (int i = 1; i <= K; ++i) {
+        for (int ii = 1; ii <= N; ++ii) {
+            make_dp(ii, i);
         }
     }
-
-    cout << dp[k][n] << "\n";
+    cout << dp[N][K] << "\n";
 }
 
 void input() {
-    cin >> n >> k;
-    solve();
+    cin >> N >> K;
+    init();
 }
 
 int main()
@@ -35,6 +41,7 @@ int main()
     freopen("input.txt", "r", stdin);
 
     input();
+    solve();
 
     return 0;
 }
