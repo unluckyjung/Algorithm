@@ -29,11 +29,13 @@ bool add_ladder(int height, int ladder_num) {
 
 
 void dfs(int height, int ladder_num, int cur) {
-    if (cur >= answer || cur > 3) return;
+    if (cur >= answer) return;
     if (check()) {
         answer = cur;
         return;
     }
+
+    if(cur == 3) return;
 
 	for (int a = height; a <= h; ++a) {
 		for (int b = ladder_num; b <= n-1; ++b) {
