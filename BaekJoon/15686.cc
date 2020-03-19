@@ -42,11 +42,20 @@ void dfs(int store_n, int run_cnt) {
         return;
     }
 
+#if 0
     for (int i = store_n; i < store_cnt; ++i) {
         store[i].run = true;
         dfs(i + 1, run_cnt + 1);
         store[i].run = false;
     }
+
+#else
+    store[store_n].run = true;
+    dfs(store_n + 1, run_cnt + 1);
+    store[store_n].run = false;
+    dfs(store_n + 1, run_cnt);
+
+#endif
 }
 
 void solve() {
