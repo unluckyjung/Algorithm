@@ -24,7 +24,7 @@ void get_answer() {
     int answer = 0;
     for (int i = 0; i <= 100; ++i) {
         for (int ii = 0; ii <= 100; ++ii) {
-            if (square_check(i,ii)) answer++;
+            if (square_check(i, ii)) answer++;
         }
     }
     cout << answer << "\n";
@@ -34,24 +34,23 @@ void move(int dir) {
     x += dx[dir];
     y += dy[dir];
     board[x][y] = true;
+    vec.push_back(dir);
 }
 
 void solve() {
-    for (int i = 1; i <= level; ++i) {
-        int vec_size = vec.size();
-        for (int k = vec_size; k >= 1; --k) {
-            int dir = (vec[k-1] + 1) % 4;
-            move(dir);
-            vec.push_back(dir);
-        }
-    }
+	for (int i = 1; i <= level; ++i) {
+		int vec_size = vec.size();
+		for (int k = vec_size; k >= 1; --k) {
+			int dir = (vec[k - 1] + 1) % 4;
+			move(dir);
+		}
+	}
 }
 
 void init(int dir) {
     vec.clear();
     board[x][y] = true;
     move(dir);
-    vec.push_back(dir);
 }
 
 void input() {
@@ -68,7 +67,8 @@ int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);  cout.tie(NULL);
-    //freopen("input.txt", "r", stdin);
+    freopen("input.txt", "r", stdin);
+
     input();
     get_answer();
 
