@@ -49,7 +49,7 @@ void melt() {
 
 void solve() {
 	melt();
-	while (!(cur_q.empty() && new_q.empty())) {
+	while (!new_q.empty()) {
 		time_cnt++;
 		left_cheese[time_cnt] = left_cheese[time_cnt - 1] - new_q.size();
 		cur_q = new_q;
