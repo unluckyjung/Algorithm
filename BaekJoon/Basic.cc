@@ -1,6 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+void solve() {
+
+}
+
+void input() {
+
+}
+
 int main()
 {
    ios_base::sync_with_stdio(false);
