@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct st{
+struct st {
     int x;
     int y;
     int dir;
@@ -21,11 +21,11 @@ deque<int> tmp;
 
 void push_new_spot(st cur) {
 
-    if (board[nx][ny] == Red) reverse(tmp.begin(), tmp.end());
-    else if (nx < 0 or nx >= n or ny < 0 or ny >= n or board[nx][ny] == Blue) {
+    if (nx < 0 or nx >= n or ny < 0 or ny >= n or board[nx][ny] == Blue) {
         nx = cur.x;
         ny = cur.y;
     }
+    else if (board[nx][ny] == Red) reverse(tmp.begin(), tmp.end());
 
     while (!tmp.empty()) {
         int curr = tmp.front(); tmp.pop_front();
@@ -35,7 +35,7 @@ void push_new_spot(st cur) {
     }
 }
 
-void range_or_Blue_check(st &cur) {
+void range_or_Blue_check(st& cur) {
 
     if (nx < 0 or nx >= n or ny < 0 or ny >= n or board[nx][ny] == Blue) {
 
@@ -67,7 +67,7 @@ int solve() {
         for (int i = 1; i <= k; ++i) {
             auto cur = status[i];
 
-            while (!board_stack[cur.x][cur.y].empty()) {
+            while (1) {
                 int TOP = board_stack[cur.x][cur.y].top();    board_stack[cur.x][cur.y].pop();
                 tmp.push_front(TOP);
                 if (TOP == i) break;
