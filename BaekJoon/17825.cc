@@ -68,7 +68,7 @@ int Move() {
 		int cur_spot = knight_spot[knight];
 		int move_dist = dice[i];
 
-		if (cur_spot == fin) continue;
+		if (cur_spot == fin) return 0;
 
 		if (move_dist >= (int)table[cur_spot].size()) {
 			visit[cur_spot] = false;
