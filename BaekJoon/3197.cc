@@ -1,126 +1,128 @@
 #include<bits/stdc++.h>
+#define MAX 1501
+#define x first
+#define y second
+#define pp pair<int, int>
+
 using namespace std;
 
 int n, m;
-char board[1501][1501];
-bool b_visit[1501][1501];
-bool w_visit[1501][1501];
+char board[MAX][MAX];
+bool swan_visit[MAX][MAX], water_visit[MAX][MAX];
 
-int dx[] = { -1,1,0,0 };
-int dy[] = { 0,0,-1,1 };
-int cnt;
+const int dx[] = { -1,1,0,0 };
+const int dy[] = { 0,0,-1,1 };
 
-queue<pair<int, int> > bq;
-queue<pair<int, int> > bnq;
+queue<pp> swan_q, water_q;
 
-queue<pair<int, int> > wq;
-queue<pair<int, int> > wnq;
 
-bool fist_L;
+bool Find_Other_Swan() {
 
-void input() {
+    vector<pp> nxt_swan;
+    while (!swan_q.empty()) {
+        pp cur = swan_q.front();    swan_q.pop();
+
+        for (int dir = 0; dir < 4; ++dir) {
+            int nx = cur.x + dx[dir];
+            int ny = cur.y + dy[dir];
+            if (nx < 0 or nx >= n or ny < 0 or ny >= m) continue;
+            if (swan_visit[nx][ny]) continue;
+
+            if (board[nx][ny] == 'L') return true;
+  
+            if (board[nx][ny] == 'X') {
+                swan_visit[nx][ny] = true;
+                nxt_swan.push_back({ nx, ny });
+                continue;
+            }
+            swan_visit[nx][ny] = true;
+            swan_q.push({ nx, ny });
+        }
+    }
+
+    for (const pp &it : nxt_swan) {
+        swan_q.push(it);
+    }
+    return false;
+}
+
+void Water_Bfs() {
+
+    vector<pp> nxt_water;
+    while (!water_q.empty()) {
+        pp cur = water_q.front();    water_q.pop();
+
+        for (int dir = 0; dir < 4; ++dir) {
+            int nx = cur.x + dx[dir];
+            int ny = cur.y + dy[dir];
+
+            if (nx < 0 or nx >= n or ny < 0 or ny >= m)continue;
+            if (water_visit[nx][ny])continue;
+
+            if (board[nx][ny] == 'X') {
+                water_visit[nx][ny] = true;
+                board[nx][ny] = '.';
+                nxt_water.push_back({ nx, ny });
+                continue;
+            }
+            water_visit[nx][ny] = true;
+            water_q.push({ nx, ny });
+        }
+    }
+
+    for (const pp& it : nxt_water) {
+        water_q.push(it);
+    }
+
+}
+
+int Solve() {
+    int cnt = 0;
+    while (1) {
+        if (Find_Other_Swan()) return cnt;
+        cnt++;
+        Water_Bfs();
+    }
+    return -1;
+}
+
+bool is_first_swan = true;
+
+void Input() {
     cin >> n >> m;
+    string line;
     for (int i = 0; i < n; ++i) {
+        cin >> line;
         for (int ii = 0; ii < m; ++ii) {
-            cin >> board[i][ii];
+            board[i][ii] = line[ii];
 
             if (board[i][ii] == 'L') {
-                if (!fist_L) {
-                    b_visit[i][ii] = true;
-                    bq.push(make_pair(i, ii));
-                    fist_L = true;
+                if (is_first_swan) {
+                    swan_visit[i][ii] = true;
+                    swan_q.push({ i, ii });
+                    is_first_swan = false;
                 }
                 else {
-                    w_visit[i][ii] = true;
-                    wq.push(make_pair(i, ii));
+                    water_visit[i][ii] = true;
+                    water_q.push({ i, ii });
                 }
             }
             else if (board[i][ii] == '.') {
-                w_visit[i][ii] = true;
-                wq.push(make_pair(i, ii));
+                water_visit[i][ii] = true;
+                water_q.push({ i, ii });
             }
         }
     }
 }
 
-void output() {
-    cout << "\n\n";
-    for (int i = 0; i < n; ++i) {
-        for (int ii = 0; ii < m; ++ii) {
-            cout << board[i][ii];
-        }
-        cout << "\n";
-    }
-}
-
-
-void b_bfs() {
-
-    while (!bq.empty()) {
-        pair<int, int> cur = bq.front();    bq.pop();
-        int cur_x = cur.first;
-        int cur_y = cur.second;
-
-        for (int dir = 0; dir < 4; ++dir) {
-            int nx = cur_x + dx[dir];
-            int ny = cur_y + dy[dir];
-            if (nx < 0 || nx >= n || ny < 0 || ny >= m)continue;
-            if (b_visit[nx][ny])continue;
-
-            if (board[nx][ny] == 'L') {
-                cout << cnt << "\n";
-                exit(0);
-            }
-
-            if (board[nx][ny] == 'X') {
-                b_visit[nx][ny] = true;
-                bnq.push(make_pair(nx, ny));
-                continue;
-            }
-            b_visit[nx][ny] = true;
-            bq.push(make_pair(nx, ny));
-        }
-    }
-    bq = bnq;
-    while (!bnq.empty())  bnq.pop();
-}
-
-void sink() {
-    while (!wq.empty()) {
-        pair<int, int> cur = wq.front();    wq.pop();
-        int cur_x = cur.first;
-        int cur_y = cur.second;
-
-        for (int dir = 0; dir < 4; ++dir) {
-            int nx = cur_x + dx[dir];
-            int ny = cur_y + dy[dir];
-            if (nx < 0 || nx >= n || ny < 0 || ny >= m)continue;
-            if (w_visit[nx][ny])continue;
-
-            if (board[nx][ny] == 'X') {
-                w_visit[nx][ny] = true;
-                board[nx][ny] = '.';
-                wnq.push(make_pair(nx, ny));
-                continue;
-            }
-            w_visit[nx][ny] = true;
-            wq.push(make_pair(nx, ny));
-        }
-    }
-    wq = wnq;
-    while (!wnq.empty())  wnq.pop();
-}
 
 int main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+    cin.tie(NULL); cout.tie(NULL);
     freopen("input.txt", "r", stdin);
-    input();
-    while (1) {
-        //output();
-        b_bfs();
-        cnt++;
-        sink();
-    }
+
+    Input();
+    cout << Solve();
+
     return 0;
 }
