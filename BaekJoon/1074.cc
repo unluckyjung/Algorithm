@@ -1,50 +1,62 @@
 #include <bits/stdc++.h>
+
 using namespace std;
+int n, findR, findC;
 
-//1074 Z
 
-int N, X, Y;
-int result;
-void ans(int x, int y, int len) {
-	if (x == X and y == Y) {
-		//좌표를 찾았다면?
-		cout << result; exit(0);
-	}
+#if 01
+int Func(int curSize, int r, int c) {
+    if (curSize == 0) return 0;
 
-	if (len == 1) {
-		//크기가 1이라면?
-		result++;
-		return;
-	}
-	if (x <= X and y <= Y and x + len > X and y + len > Y) {
-		//찾고자 하는 좌표가 범위 안에 있다면?
-		
-		//x가 X좌표 보다 작거나 같다면?
-		//x+len이 X보다 크다면?	(X는 찾고자 하는 곳의 좌표)
-		//4 방면 분할탐색
-		ans(x, y, len / 2);
-		ans(x, y + len / 2, len / 2);
-		ans(x + len / 2, y, len / 2);
-		ans(x + len / 2, y + len / 2, len / 2);
-	}
-	//범위 밖이라면?
-	else
-	{
-		result += len * len;
-		//남는 공간을 전부 길이만큼 곱해서 더해줌.
-	}
+    int half = pow(2, curSize - 1);
+    int cnt = half * half;
+
+    if (r < half and c < half) return Func(curSize - 1, r, c);
+    if (r < half and c >= half) return cnt + Func(curSize - 1, r, c - half);
+    if (r >= half and c < half) return cnt * 2 + Func(curSize - 1, r - half, c);
+    return cnt * 3 + Func(curSize - 1, r - half, c - half);
+}
+
+void Solve() {
+    cout << Func(n, findR, findC);
+}
+
+#else
+
+int answer;
+int Func(int len, int r, int c) {
+    if (r == findR and c == findC) return answer;
+
+    if (r <= findR and c <= findC and findR < r + len and findC < c + len) {
+        if (Func(len / 2, r, c)) return answer;
+        if (Func(len / 2, r, c + len / 2)) return answer;
+        if (Func(len / 2, r + len / 2, c)) return answer;
+        if (Func(len / 2, r + len / 2, c + len / 2)) return answer;
+    }
+
+    answer += len * len;
+    return 0;
+}
+
+
+void Solve() {
+    cout << Func((int)pow(2, n), 0, 0);
+}
+
+#endif
+
+
+void Input() {
+    cin >> n >> findR >> findC;
 }
 
 int main()
 {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);  cout.tie(NULL);
+    freopen("input.txt", "r", stdin);
+    Input();
+    Solve();
 
-	cin >> N >> X >> Y;
-
-	ans(0, 0, (int)pow(2, N));
-
-
-	return 0;
+    return 0;
 }
