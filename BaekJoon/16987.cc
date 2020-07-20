@@ -8,13 +8,10 @@ struct egg {
 
 int n, answer;
 egg eggs[10];
-bool isUsed[10];
 
 int HitEgg(int attackEgg, int defenceEgg) {
 
     int brokenCnt = 0;
-    isUsed[defenceEgg] = true;
-
     eggs[attackEgg].durability -= eggs[defenceEgg].weight;
     eggs[defenceEgg].durability -= eggs[attackEgg].weight;
 
@@ -27,15 +24,12 @@ int HitEgg(int attackEgg, int defenceEgg) {
 void RecoveryEgg(int attackEgg, int defenceEgg) {
     eggs[attackEgg].durability += eggs[defenceEgg].weight;
     eggs[defenceEgg].durability += eggs[attackEgg].weight;
-    isUsed[defenceEgg] = false;
 }
 
 void SelectEgg(int attackEgg, int brokenCnt) {
 
-    if (attackEgg == n) {
-        answer = max(answer, brokenCnt);
-        return;
-    }
+    if (attackEgg > n) return;
+    answer = max(answer, brokenCnt);
 
     if (eggs[attackEgg].durability <= 0) {
         SelectEgg(attackEgg + 1, brokenCnt);
@@ -44,7 +38,6 @@ void SelectEgg(int attackEgg, int brokenCnt) {
 
     for (int defenceEgg = 0; defenceEgg < n; ++defenceEgg) {
         if (defenceEgg == attackEgg) continue;
-        if (isUsed[defenceEgg]) continue;
         if (eggs[defenceEgg].durability <= 0) continue;
 
         SelectEgg(attackEgg + 1, brokenCnt + HitEgg(attackEgg, defenceEgg));
