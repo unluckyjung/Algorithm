@@ -1,3 +1,5 @@
+#if 00
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -100,3 +102,82 @@ int main()
 	}
 	return 0;
 }
+
+#else 
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+string cmds, inputNums;
+
+void solve(string inputNums) {
+    deque<int> numsDeque;
+
+    bool isFirstDigits = true;
+    int index = 0;
+    for (char num : inputNums) {
+        if (num == ',' or num == ']') {
+            isFirstDigits = true;
+            index++;
+        }
+
+        if (!isdigit(num)) continue;
+        if (isFirstDigits) {
+            isFirstDigits = false;
+            numsDeque.push_back(num - '0');
+        }
+        else {
+            numsDeque[index] = numsDeque[index] * 10 + (num - '0');
+        }
+    }
+
+    bool isReverse = false;
+
+    for (const char &cmd : cmds) {
+        if (cmd == 'R') isReverse = !isReverse;
+        else if (cmd == 'D') {
+            if (numsDeque.empty()) {
+                cout << "error";
+                return;
+            }
+            if (isReverse) numsDeque.pop_back();
+            else numsDeque.pop_front();
+        }
+    }
+
+    if (isReverse) reverse(numsDeque.begin(), numsDeque.end());
+
+    cout << "[";
+    for (int i = 0; i < (int)numsDeque.size(); ++i) {
+        cout << numsDeque[i];
+        if (i != numsDeque.size() - 1) cout << ",";
+    }
+    cout << "]";
+}
+
+void input() {
+    int t;  cin >> t;
+    while (t--) {
+        int n;
+        cin >> cmds;
+        cin >> n;
+        cin >> inputNums;
+        solve(inputNums);
+        cout << "\n";
+    }
+
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);  cout.tie(NULL);
+    freopen("input.txt", "r", stdin);
+
+    input();
+
+    return 0;
+}
+
+#endif
