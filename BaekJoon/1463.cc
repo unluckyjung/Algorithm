@@ -1,50 +1,27 @@
 #include <bits/stdc++.h>
 using namespace std;
-//백준 1463 1로만들기.
-//https://www.acmicpc.net/problem/1463
 
-bool visit[1000002];
+const int MAX = 1e6 + 2;
+int dp[MAX];
 int n;
 
-void bfs(int n) {
-	queue<pair<int, int>> q;
-	visit[n] = true; q.push({ n, 0 });
-
-	while (!q.empty()) {
-		auto cur = q.front(); q.pop();
-		int number = cur.first;
-		int cnt = cur.second;
-
-		if (number == 1) {
-			cout << cnt;
-			return;
-		}
-
-		if (visit[number - 1] == false) {
-			visit[number - 1] = true;
-			q.push({ number - 1, cnt + 1 });
-		}
-		if (visit[number / 2] == false and number % 2 == 0) {
-			visit[number / 2] = true;
-			q.push({ number / 2, cnt + 1 });
-		}
-		if (visit[number / 3] == false and number % 3 == 0) {
-			visit[number / 3] = true;
-			q.push({ number / 3, cnt + 1 });
-		}
-
-	}
+void solve() {
+    cin >> n;
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = dp[i - 1] + 1;
+        if (i % 2 == 0) dp[i] = min(dp[i], dp[i / 2] + 1);
+        if (i % 3 == 0) dp[i] = min(dp[i], dp[i / 3] + 1);
+    }
+    cout << dp[n] << "\n";
 }
 
 int main()
 {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);  cout.tie(NULL);
+    freopen("input.txt", "r", stdin);
 
-	cin >> n;
-	bfs(n);
+    solve();
 
-
-	return 0;
+    return 0;
 }
