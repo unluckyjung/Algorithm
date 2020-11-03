@@ -3,6 +3,32 @@
 
 using namespace std;
 
+#if 01
+
+int answer, numbersLen;
+vector<int> numbers;
+
+void dfs(int index, int sum, int target){
+    if(index == numbersLen){
+        if(sum == target) answer++;
+        return;
+    }
+    dfs(index + 1, sum + numbers[index], target);
+    dfs(index + 1, sum - numbers[index], target);
+}
+
+
+int solution(vector<int> nums, int target) {
+    numbers = nums;
+    numbersLen = numbers.size();
+    
+    dfs(0, 0, target);
+    
+    return answer;
+}
+
+
+#else
 vector<int>num;
 int answer, tg, Size;
 
@@ -43,3 +69,5 @@ int solution2(vector<int> numbers, int target) {
 	dfs(0, 0, numbers);
 	return answer;
 }
+
+#endif
