@@ -6,28 +6,28 @@ using namespace std;
 
 vector<pp> node[MAX];
 int dist[MAX];
-bool visit[MAX];
+bool visited[MAX];
 
 int n;
 
 queue<int> q;
 
-int bfs(int cmd){
+int bfs(int cmd) {
     int ret_dist = 0;
     int ret_node = 0;
 
-    while(!q.empty()){
+    while (!q.empty()) {
         int cur_node = q.front(); q.pop();
 
-        for(auto nxt : node[cur_node]){
+        for (auto nxt : node[cur_node]) {
             int nxt_node = nxt.first;
             int nxt_weight = nxt.second;
 
-            if(visit[nxt_node]) continue;
-            visit[nxt_node] = true;
+            if (visited[nxt_node]) continue;
+            visited[nxt_node] = true;
             dist[nxt_node] = dist[cur_node] + nxt_weight;
 
-            if(ret_dist < dist[nxt_node]){
+            if (ret_dist < dist[nxt_node]) {
                 ret_dist = dist[nxt_node];
                 ret_node = nxt_node;
             }
@@ -35,21 +35,21 @@ int bfs(int cmd){
         }
     }
 
-    if(cmd) return ret_node;
+    if (cmd) return ret_node;
     else return ret_dist;
 }
 
 void solve() {
     const int root = 1;
 
-    visit[root] = true;
+    visited[root] = true;
     q.push(root);
     int start = bfs(1);
 
-    memset(dist, 0 , sizeof(dist));
-    memset(visit, false, sizeof(visit));
+    memset(dist, 0, sizeof(dist));
+    memset(visited, false, sizeof(visited));
 
-    visit[start] = true;
+    visited[start] = true;
     q.push(start);
 
     cout << bfs(0);
@@ -57,23 +57,23 @@ void solve() {
 
 void input() {
     cin >> n;
-    for(int i = 1 ; i< n ; ++i){
+    for (int i = 1; i < n; ++i) {
         int a, b, weight;
         cin >> a >> b >> weight;
 
-        node[a].push_back({b, weight});
-        node[b].push_back({a, weight});
+        node[a].push_back({ b, weight });
+        node[b].push_back({ a, weight });
     }
 }
 
 int main()
 {
-   ios_base::sync_with_stdio(false);
-   cin.tie(NULL);  cout.tie(NULL);
-   freopen("input.txt", "r", stdin);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);  cout.tie(NULL);
+    //freopen("input.txt", "r", stdin);
 
-   input();
-   solve();
+    input();
+    solve();
 
-   return 0;
+    return 0;
 }

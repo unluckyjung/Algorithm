@@ -2,33 +2,35 @@
 using namespace std;
 
 char board[12][6];
-bool visit[12][6];
+bool visited[12][6];
 
-queue<pair<int, int>>q;
-queue<pair<int, int>>bq;
-bool boom;
-int boom_cnt;
+queue<pair<int, int>> q;
+queue<pair<int, int>> bq;
 
 int dx[] = { -1,1,0,0 };
 int dy[] = { 0,0,-1,1 };
 
-
 int n = 12, m = 6;
+int boom_cnt;
+bool isCanBoom;
+const int boomConnectCount = 4;
 
 void bfs();
 
 void relocation() {
-	for (int i = 10; i >= 0; --i) {
-		for (int ii = 0; ii < m; ++ii) {
-			char ch = board[i][ii];
-			int ni = i;
-			while (1) {
-				if (ni == 11)break;
-				if (board[ni + 1][ii] != '.')break;
-				ni++;
+	for (int ii = 0; ii < m; ++ii) {
+		queue<char> buff;
+		for (int i = n; i >= 0; --i) {
+			if (board[i][ii] == '.') continue;
+			buff.push(board[i][ii]);
+		}
+
+		for (int i = n; i >= 0; --i) {
+			if (!buff.empty()) {
+				board[i][ii] = buff.front();
+				buff.pop();
 			}
-			board[i][ii] = '.';
-			board[ni][ii] = ch;
+			else board[i][ii] = '.';
 		}
 	}
 }
@@ -45,17 +47,17 @@ void solve() {
 	while (1) {
 		for (int i = 0; i < n; ++i) {
 			for (int ii = 0; ii < m; ++ii) {
-				if (board[i][ii] == '.' or visit[i][ii])continue;
-				visit[i][ii] = true;
+				if (board[i][ii] == '.' or visited[i][ii])continue;
+				visited[i][ii] = true;
 				q.push({ i, ii });
 				bfs();
 			}
 		}
-		if (boom) {
-			boom = false;
+		if (isCanBoom) {
+			isCanBoom = false;
 			boom_cnt++;
 			relocation();
-			memset(visit, false, sizeof(visit));
+			memset(visited, false, sizeof(visited));
 		}
 		else return;
 	}
@@ -71,25 +73,26 @@ void bfs() {
 			int nx = cur.first + dx[dir];
 			int ny = cur.second + dy[dir];
 			if (nx < 0 or nx >= n or ny < 0 or ny >= m)continue;
-			if (visit[nx][ny])continue;
+			if (visited[nx][ny])continue;
 			if (board[nx][ny] != board[cur.first][cur.second])continue;
-			visit[nx][ny] = true;
+			visited[nx][ny] = true;
 			q.push({ nx,ny });
-		}		
+		}
 	}
 	while (!bq.empty()) {
-		if (same_cnt >= 4) {
-			boom = true;
+		if (same_cnt >= boomConnectCount) {
+			isCanBoom = true;
 			auto bq_cur = bq.front();
 			board[bq_cur.first][bq_cur.second] = '.';
 		}
 		bq.pop();
 	}
 }
+
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
-	freopen("input.txt", "r", stdin);
+	//freopen("input.txt", "r", stdin);
 
 	input();
 	solve();
