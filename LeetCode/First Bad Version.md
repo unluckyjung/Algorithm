@@ -1,3 +1,6 @@
+# First Bad Version
+
+```cpp
 class Solution {
 public:
     int firstBadVersion(int n) {
@@ -20,3 +23,4 @@ public:
         return answer;
     }
 };
+```
