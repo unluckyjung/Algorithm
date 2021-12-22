@@ -1,63 +1,43 @@
 #include <bits/stdc++.h>
-#define ll long long
-#define MAX 1000000
+
 using namespace std;
 
-ll tree[MAX + 1];
+int tree[1000002];
+int treeCount, needTreeSum;
+int maxTreeHeight, answer;
 
-ll answer;
-ll n, want_tree;
-
-void input() {
-	cin >> n >> want_tree;
-	for (int i = 0; i < n; ++i) {
-		cin >> tree[i];
-		answer = max(answer, tree[i]);
-	}
+bool isEnoughTreeSum(int sawHeight) {
+  long long cutTreeSum = 0;
+  for (int i = 0; i < treeCount; ++i) {
+    if (tree[i] <= sawHeight) continue;
+    cutTreeSum += (tree[i] - sawHeight);
+  }
+  return cutTreeSum >= needTreeSum;
 }
 
-ll tree_cut(ll h) {
-	ll sum = 0;
-	for (int i = 0; i < n; ++i) {
-		if (tree[i] <= h)continue;
-		sum += (tree[i] - h);
-	}
-	return sum;
-}
+int main() {
+  ios_base::sync_with_stdio(0);
+  cin.tie(0);
 
+  cin >> treeCount >> needTreeSum;
+  for (int i = 0; i < treeCount; ++i) {
+    cin >> tree[i];
+    maxTreeHeight = max(maxTreeHeight, tree[i]);
+  }
 
-void solve() {
-	ll s = 0;
-	ll e = answer;
-	ll mid;
-	while (s <= e) {
-		mid = (s + e) / 2;
+  int st = 0;
+  int ed = maxTreeHeight;
 
-		ll tree_sum = tree_cut(mid);
-		if (tree_sum == want_tree) {
-			cout << mid;
-			return;
-		}
-		else if (tree_sum > want_tree) {
-			answer = mid;
-			s = mid + 1;
-		}
-		else e = mid - 1;
-	}
+  while (st <= ed) {
+    int mid = st + (ed - st) / 2;
+    if (isEnoughTreeSum(mid)) {
+      answer = mid;
+      st = mid + 1;
+    } else {
+      ed = mid - 1;
+    }
+  }
+  cout << answer << "\n";
 
-	cout << answer;
-}
-
-
-int main()
-{
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-    freopen("input.txt", "r", stdin);
-
-	input();
-	solve();
-
-	return 0;
+  return 0;
 }

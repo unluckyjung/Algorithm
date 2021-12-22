@@ -1,50 +1,44 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-vector<int> A, B;
+vector<int> nums1, nums2;
 
-void Solve() {
+void solve() {
+  vector<int> answer;
+  for (const int &num : nums1) {
+    if (binary_search(nums2.begin(), nums2.end(), num)) continue;
+    answer.push_back(num);
+  }
 
-    vector<int> result;
-    int cnt = 0;
-    for (const int& a : A) {
-        if (!binary_search(B.begin(), B.end(), a)) {
-            result.push_back(a);
-        }
-    }
-
-    cout << result.size() << "\n";
-    for (const int& answer : result) {
-        cout << answer << " ";
-    }
+  cout << answer.size() << "\n";
+  for (const int &num : answer) {
+    cout << num << " ";
+  }
 }
 
-void Input() {
-    int n, m;
-    cin >> n >> m;
-    A.resize(n);
-    B.resize(m);
+int main() {
+  ios_base::sync_with_stdio(0);
+  cin.tie(0);
 
-    for (int& it : A) {
-        cin >> it;
-    }
+  int num1Count, num2Count;
+  cin >> num1Count >> num2Count;
 
-    for (int& it : B) {
-        cin >> it;
-    }
+  int num;
+  for (int i = 0; i < num1Count; ++i) {
+    cin >> num;
+    nums1.push_back(num);
+  }
 
-    sort(A.begin(), A.end());
-    sort(B.begin(), B.end());
-}
+  for (int i = 0; i < num2Count; ++i) {
+    cin >> num;
+    nums2.push_back(num);
+  }
 
-int main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);  cout.tie(NULL);
-    freopen("input.txt", "r", stdin);
+  sort(nums1.begin(), nums1.end());
+  sort(nums2.begin(), nums2.end());
 
-    Input();
-    Solve();
+  solve();
 
-    return 0;
+  return 0;
 }
