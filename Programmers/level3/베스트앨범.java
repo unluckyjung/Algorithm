@@ -4,7 +4,7 @@ class Solution {
 
     List<Integer> answer = new ArrayList<>();
     Map<String, Integer> typeMap = new HashMap<>();
-    Map<String, List<Pair>> playMap = new TreeMap<>();
+    Map<String, List<Pair>> playMap = new HashMap<>();
 
     public List<Integer> solution(String[] genres, int[] plays) {
         for (int i = 0; i < genres.length; ++i) {
@@ -12,17 +12,11 @@ class Solution {
             int playIndex = i;
             int playCount = plays[i];
 
-            if (typeMap.containsKey(type)) typeMap.put(type, typeMap.get(type) + playCount);
-            else typeMap.put(type, playCount);
+            typeMap.put(type, typeMap.getOrDefault(type, 0) + playCount);
 
-            if (playMap.containsKey(type)) {
-                List<Pair> list = playMap.get(type);
-                list.add(new Pair(playCount, playIndex));
-
-                playMap.put(type, list);
-            } else {
-                playMap.put(type, new ArrayList<>(Arrays.asList(new Pair(playCount, playIndex))));
-            }
+            List<Pair> list = playMap.getOrDefault(type, new ArrayList<>());
+            list.add(new Pair(playCount, playIndex));
+            playMap.put(type, list);
         }
 
         Map<Integer, String> orderedTypes = new TreeMap<>();
