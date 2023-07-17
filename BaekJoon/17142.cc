@@ -10,7 +10,7 @@ vector<pp> ready_virus;
 vector<int> run_virus;
 
 int board[52][52];
-bool visit[52][52];
+bool visited[52][52];
 
 const int dx[] = { -1,1,0,0 };
 const int dy[] = { 0,0,-1,1 };
@@ -42,10 +42,10 @@ void Bfs() {
                 int ny = cur.y + dy[dir];
 
                 if (nx < 0 or nx >= n or ny < 0 or ny >= n) continue;
-                if (visit[nx][ny] or board[nx][ny] == 1) continue;
+                if (visited[nx][ny] or board[nx][ny] == 1) continue;
 
                 if (board[nx][ny] == 0) left_space--;
-                visit[nx][ny] = true;
+                visited[nx][ny] = true;
                 q.push({ nx,ny });
             }
         }
@@ -58,14 +58,14 @@ void Solve() {
     do {
 
         q = queue<pp>();
-        memset(visit, false, sizeof(visit));
+        memset(visited, false, sizeof(visited));
 
         for (int i = 0; i < virus_num; ++i) {
 
             if (run_virus[i] == 0) continue;
 
             auto running_virus = ready_virus[i];
-            visit[running_virus.x][running_virus.y] = true;
+            visited[running_virus.x][running_virus.y] = true;
             q.push({ running_virus.x, running_virus.y });
         }
 

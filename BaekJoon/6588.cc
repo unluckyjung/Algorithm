@@ -2,13 +2,13 @@
 #define MAX 1000001
 using namespace std;
 
-int visit[MAX];
+int visited[MAX];
 int num;
 
 void prime_set() {
     for (int i = 2; i < MAX; ++i) {
         for (int ii = i; ii < MAX; ii+=i) {
-            visit[ii]++;
+            visited[ii]++;
         }
     }
 }
@@ -20,7 +20,7 @@ void solve() {
 
         bool flag = true;
         for (int i = 3; i <= num; i+=2) {
-            if (visit[i] != 1 || visit[num-i] != 1)continue;
+            if (visited[i] != 1 || visited[num-i] != 1)continue;
             cout << num << " = " << i << " + " << num - i << "\n";
             flag = false;
             break;

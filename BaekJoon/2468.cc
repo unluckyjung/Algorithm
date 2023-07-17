@@ -6,7 +6,7 @@ using namespace std;
 int n;
 
 int board[101][101];
-bool visit[101][101];
+bool visiteded[101][101];
 
 int dx[] = { 1,-1,0,0 };
 int dy[] = { 0,0,1,-1 };
@@ -39,13 +39,13 @@ int main() {
 		int area = 0;
 		//처음에 잠기지 않은 지점의 수는 0개로 시작한다.
 
-		memset(visit, false, sizeof(visit));
-		//비가 오는 경우의수가 달라질경우 visit를 초기화 해주어야한다.
+		memset(visited, false, sizeof(visited));
+		//비가 오는 경우의수가 달라질경우 visited를 초기화 해주어야한다.
 
 		for (int i = 0; i < n; ++i) {
 			for (int ii = 0; ii < n; ++ii) {
-				if (board[i][ii] <= rain or visit[i][ii]) continue;
-				visit[i][ii] = true;	q.push({ i,ii });
+				if (board[i][ii] <= rain or visited[i][ii]) continue;
+				visited[i][ii] = true;	q.push({ i,ii });
 				area++;
 				//새로운 지점을 발견했을때 area ++ 해준다.
 
@@ -59,8 +59,8 @@ int main() {
 						int ny = cur.second + dy[dir];
 
 						if (nx < 0 or nx >= n or ny < 0 or ny >= n) continue;
-						if (visit[nx][ny] or board[nx][ny] <= rain)continue;
-						visit[nx][ny] = true;	q.push({ nx,ny });
+						if (visited[nx][ny] or board[nx][ny] <= rain)continue;
+						visited[nx][ny] = true;	q.push({ nx,ny });
 					}
 				}
 			}
