@@ -25,6 +25,7 @@ int main() {
     cin >> cookies[i];
     maxCookieSize = max(maxCookieSize, cookies[i]);
   }
+  if (cookieCount >= humanCount) answer = 1;
 
   int st = 0;
   int ed = maxCookieSize;
