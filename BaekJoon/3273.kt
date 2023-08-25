@@ -21,6 +21,7 @@ fun main() {
         val needNumber = targetNumber - num
         if (needNumber <= 0 || needNumber > NUM_MAX_SIZE) continue
         if (numExist[needNumber].not()) continue
+        if (needNumber == num) continue // 없어도 홀수개는 /2 에서 처리 되어 AC
         answer++
     }
 
